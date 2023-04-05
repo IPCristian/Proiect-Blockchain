@@ -1,0 +1,36 @@
+.App {
+  text-align: center;
+  height: auto;
+}
+
+h1 {
+  font-size: 85px;
+  padding-top: 5%;
+  padding-bottom: 3%;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bolder;
+  background-image: repeating-radial-gradient(farthest-side at 5px 5px,#553c9a, #ee4b2b, #553c9a);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+h3 {
+  font-size: 75px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bolder;
+  background-image: repeating-radial-gradient(farthest-side at 5px 5px,#553c9a, #ee4b2b, #553c9a);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.Wallet {
+  text-align: center;
+  padding-bottom: 2%;
+  margin-right: 2%;
+  font-size: 30px;
+  font-family: Roboto;
+  font-weight: bolder;
+  color: white;
+}
