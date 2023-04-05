@@ -225,7 +225,7 @@ function App() {
       <div className="App" sx={{ width: '80%' }}>
       <h3>Reserve a parking spot</h3>
       <h2><div className="Wallet">Current connected wallet:<br/>{account}</div></h2>
-      <TableContainer component={Paper} sx={{  width: '70%', margin: 'auto', overflow: 'auto', maxHeight: '40em'}}>
+      <TableContainer component={Paper} sx={{  width: '70%', margin: 'auto', overflow: 'auto', maxHeight: '35em'}}>
           <Table sx={{ minWidth: 650 }} aria-label="parking spots table">
               <TableHead>
                 <TableRow>
@@ -258,10 +258,10 @@ function App() {
       <div className="App" sx={{ width: '80%' }}>
         <h1>Welcome to the<br/> Parking Revolution</h1>
         {account? <div className="Wallet">Current connected wallet:<br/>{account}</div> : 
-        <Button variant="contained" sx={{ marginTop: '10%', backgroundColor: '#553c9a', padding: '0.7%', fontSize: '25px', fontWeight: 'bold', borderRadius: 24, color: 'white'}}
+        <Button variant="contained" sx={{ marginTop: '10%', backgroundColor: '#553c9a', padding: '1%', fontSize: '25px', fontWeight: 'bold', borderRadius: 24, color: 'white'}}
         onClick={connectWallet}>Connect Wallet</Button>}
       </div>
-      : <div className="App" sx={{ width: '80%' }}><h1>Welcome to the<br/> Parking Revolution<br/><Button variant="contained" sx={{ marginTop: '10%', backgroundColor: '#553c9a', padding: '0.7%', fontSize: '25px', fontWeight: 'bold', borderRadius: 24, color: 'white'}}
+      : <div className="App" sx={{ width: '80%' }}><h1>Welcome to the<br/> Parking Revolution<br/><Button variant="contained" sx={{ marginTop: '10%', backgroundColor: '#553c9a', padding: '1%', fontSize: '25px', fontWeight: 'bold', borderRadius: 24, color: 'white'}}
       onClick={connectWallet}>Connect Wallet</Button></h1></div>}
       </div>}
     </ThemeProvider>
