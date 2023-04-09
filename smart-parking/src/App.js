@@ -14,7 +14,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Slide, DialogContent
 
 const web3 = new Web3('ws://127.0.0.1:7545');
 const SmartParkingABI = require('./SmartParking.json');
-const contractAdress = "0x80aA1Ba0eb628C8D295cC2Db3941118EEb52642A";
+const contractAdress = "0x4bFC8Bfa49ba45E816cE51967707ee807E3d7f31";
 const contract = new web3.eth.Contract(SmartParkingABI,contractAdress);
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -69,6 +69,7 @@ function ReservationDialog({ open, onClose, selectedSpot, selectedPrice, account
   }
 
   const handleClose = () => {
+    setSelectedHour(null);
     onClose();
   };
 
@@ -133,6 +134,7 @@ function UpdateDialog({ open, onClose, selectedSpot, account }) {
   }
 
   const handleClose = () => {
+    setSelectedPrice('');
     onClose();
   };
 
@@ -161,7 +163,7 @@ function UpdateDialog({ open, onClose, selectedSpot, account }) {
 }
 
 
-function AddSpot({ open, onClose, account }) {
+function AddSpotDialog({ open, onClose, account }) {
   const [selectedPrice, setSelectedPrice] = useState('');
 
   const handleChange = (event) => {
@@ -171,9 +173,9 @@ function AddSpot({ open, onClose, account }) {
   const handleConfirm = async () => {
     if (selectedPrice != '')
     {
-      // console.log(selectedSpot,selectedPrice,account);
       await contract.methods.addParkingSpot(selectedPrice).send({
-        from: account
+        from: account,
+        gasLimit: 3000000
       }).then(() => {
         console.log("Added successful");
       })
@@ -182,6 +184,7 @@ function AddSpot({ open, onClose, account }) {
   }
 
   const handleClose = () => {
+    setSelectedPrice('');
     onClose();
   };
 
@@ -195,7 +198,7 @@ function AddSpot({ open, onClose, account }) {
       <DialogTitle sx={{ marginBottom: "5%" }}>What price would you like for the new spot to have ?</DialogTitle>
         <DialogContent>
           <TextField
-          label="New Price"
+          label="Price"
           value={selectedPrice}
           onChange={handleChange}
           variant="outlined"
@@ -381,7 +384,7 @@ function App() {
         {account == owner? <Button variant="contained" sx={{ marginTop: '2%', backgroundColor: '#553c9a', padding: '1%', fontSize: '25px', fontWeight: 'bold', borderRadius: 24, color: 'white'}} onClick={AddSpot}>Add new Parking spot</Button> : <></>}
         <ReservationDialog open={showReservationDialog} onClose={handleCloseDialog} selectedSpot={selectedSpot} selectedPrice={selectedPrice} account={account} setAccount={setAccount}/>
         <UpdateDialog open={showUpdateDialog} onClose={handleCloseDialog} selectedSpot={selectedSpot} account={account}/>
-        <AddSpot open={showAddSpot} onClose={handleCloseDialog} account={account}/>
+        <AddSpotDialog open={showAddSpot} onClose={handleCloseDialog} account={account}/>
        <WarningDialog open={showWarningDialog} onClose={handleCloseDialog}/></div> : <div>{owner ? 
       <div className="App" sx={{ width: '80%' }}>
         <h1>Welcome to the<br/> Parking Revolution</h1>

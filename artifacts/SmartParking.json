@@ -6063,6 +6063,11 @@
 	},
 	"abi": [
 		{
+			"inputs": [],
+			"stateMutability": "nonpayable",
+			"type": "constructor"
+		},
+		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -6183,47 +6188,6 @@
 			"type": "function"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "parkingSpotId",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "numberOfHours",
-					"type": "uint256"
-				}
-			],
-			"name": "reserveSpot",
-			"outputs": [],
-			"stateMutability": "payable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "id",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "hourlyRate",
-					"type": "uint256"
-				}
-			],
-			"name": "updateParkingSpot",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"stateMutability": "nonpayable",
-			"type": "constructor"
-		},
-		{
 			"inputs": [],
 			"name": "owner",
 			"outputs": [
@@ -6323,6 +6287,42 @@
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "parkingSpotId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "numberOfHours",
+					"type": "uint256"
+				}
+			],
+			"name": "reserveSpot",
+			"outputs": [],
+			"stateMutability": "payable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "id",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "hourlyRate",
+					"type": "uint256"
+				}
+			],
+			"name": "updateParkingSpot",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		}
 	]
