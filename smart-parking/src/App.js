@@ -10,11 +10,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Slide, DialogContentText, FormControl, InputLabel, MenuItem, Select } from '@mui/material/';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Slide, DialogContentText, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material/';
 
 const web3 = new Web3('ws://127.0.0.1:7545');
 const SmartParkingABI = require('./SmartParking.json');
-const contractAdress = "0x08d8b3697139945e39aD608cCdb3c49c014FC6bF";
+const contractAdress = "0x80aA1Ba0eb628C8D295cC2Db3941118EEb52642A";
 const contract = new web3.eth.Contract(SmartParkingABI,contractAdress);
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -112,6 +112,103 @@ function ReservationDialog({ open, onClose, selectedSpot, selectedPrice, account
   );
 }
 
+function UpdateDialog({ open, onClose, selectedSpot, account }) {
+  const [selectedPrice, setSelectedPrice] = useState('');
+
+  const handleChange = (event) => {
+    setSelectedPrice(event.target.value);
+  };
+
+  const handleConfirm = async () => {
+    if (selectedPrice != '')
+    {
+      // console.log(selectedSpot,selectedPrice,account);
+      await contract.methods.updateParkingSpot(selectedSpot,selectedPrice).send({
+        from: account
+        }).then(() => {
+        console.log("Update successful");
+      })
+    }
+    handleClose();
+  }
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  return (
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      onClose={handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogTitle sx={{ marginBottom: "5%" }}>What price would you like to update the spot to ?</DialogTitle>
+        <DialogContent>
+          <TextField
+          label="New Price"
+          value={selectedPrice}
+          onChange={handleChange}
+          variant="outlined"
+          fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button sx={{ fontSize: '16px', textWeight: 'bold' }} onClick={handleConfirm}>Confirm</Button>
+        </DialogActions>
+    </Dialog>
+  );
+}
+
+
+function AddSpot({ open, onClose, account }) {
+  const [selectedPrice, setSelectedPrice] = useState('');
+
+  const handleChange = (event) => {
+    setSelectedPrice(event.target.value);
+  };
+
+  const handleConfirm = async () => {
+    if (selectedPrice != '')
+    {
+      // console.log(selectedSpot,selectedPrice,account);
+      await contract.methods.addParkingSpot(selectedPrice).send({
+        from: account
+      }).then(() => {
+        console.log("Added successful");
+      })
+    }
+    handleClose();
+  }
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  return (
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      onClose={handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogTitle sx={{ marginBottom: "5%" }}>What price would you like for the new spot to have ?</DialogTitle>
+        <DialogContent>
+          <TextField
+          label="New Price"
+          value={selectedPrice}
+          onChange={handleChange}
+          variant="outlined"
+          fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button sx={{ fontSize: '16px', textWeight: 'bold' }} onClick={handleConfirm}>Confirm</Button>
+        </DialogActions>
+    </Dialog>
+  );
+}
+
 
 function App() {
 
@@ -119,7 +216,9 @@ function App() {
   const [spots, setSpots] = useState([]);
   const [owner, setOwner] = useState(null);
   const [showReservationDialog, setShowReservationDialog] = useState(false);
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showWarningDialog, setShowWarningDialog] = useState(false);
+  const [showAddSpot, setShowAddSpot] = useState(false);
   const [selectedSpot, setCurrentSpot] = useState(null);
   const [selectedPrice, setSelectedPrice] = useState(null);
 
@@ -214,9 +313,35 @@ function App() {
     }
   };
 
+  const updatePrice = (id) => {
+    if (account)
+    {
+      setShowUpdateDialog(true);
+      setCurrentSpot(id);
+    }
+    else
+    {
+      setShowWarningDialog(true);
+    }
+  }
+
+  const AddSpot = (id) => {
+    if (account)
+    {
+      setShowAddSpot(true);
+      setCurrentSpot(id);
+    }
+    else
+    {
+      setShowWarningDialog(true);
+    }
+  }
+
   const handleCloseDialog = () => {
     setShowReservationDialog(false);
+    setShowUpdateDialog(false);
     setShowWarningDialog(false);
+    setShowAddSpot(false);
   };
 
   return (
@@ -243,7 +368,7 @@ function App() {
               <TableCell align="center" sx={{ fontSize: '25px'}}>{parkingSpot.id}</TableCell>
               <TableCell align="center" sx={{ fontSize: '25px'}}>{(parkingSpot.hourlyRate*(10**-18)).toFixed(8)} Ether</TableCell>
                 {owner === account? <TableCell align="center"><Button variant="contained" sx={{ backgroundColor: '#553c9a',
-                padding: '4%', paddingLeft: '8%', paddingRight: '8%', fontSize: '15px', fontWeight: 'bold', borderRadius: 8, color: 'white'}} onClick={connectWallet}>Update</Button></TableCell> : 
+                padding: '4%', paddingLeft: '8%', paddingRight: '8%', fontSize: '15px', fontWeight: 'bold', borderRadius: 8, color: 'white'}} onClick={() => updatePrice(parkingSpot.id)}>Update</Button></TableCell> : 
                 <TableCell align="center">{parkingSpot.available? <Button variant="contained" sx={{ backgroundColor: '#553c9a',
                 padding: '4%', paddingLeft: '8%', paddingRight: '8%', fontSize: '15px', fontWeight: 'bold', borderRadius: 8, color: 'white'}} onClick={() => showReservation(parkingSpot.id, parkingSpot.hourlyRate)}>Reserve</Button> :
                 <Button variant="contained" disabled sx={{ backgroundColor: '#553c9a',
@@ -253,8 +378,11 @@ function App() {
             </TableBody>
           </Table>
         </TableContainer>
+        {account == owner? <Button variant="contained" sx={{ marginTop: '2%', backgroundColor: '#553c9a', padding: '1%', fontSize: '25px', fontWeight: 'bold', borderRadius: 24, color: 'white'}} onClick={AddSpot}>Add new Parking spot</Button> : <></>}
         <ReservationDialog open={showReservationDialog} onClose={handleCloseDialog} selectedSpot={selectedSpot} selectedPrice={selectedPrice} account={account} setAccount={setAccount}/>
-       <WarningDialog open={showWarningDialog} onClose={handleCloseDialog} /></div> : <div>{owner ? 
+        <UpdateDialog open={showUpdateDialog} onClose={handleCloseDialog} selectedSpot={selectedSpot} account={account}/>
+        <AddSpot open={showAddSpot} onClose={handleCloseDialog} account={account}/>
+       <WarningDialog open={showWarningDialog} onClose={handleCloseDialog}/></div> : <div>{owner ? 
       <div className="App" sx={{ width: '80%' }}>
         <h1>Welcome to the<br/> Parking Revolution</h1>
         {account? <div className="Wallet">Current connected wallet:<br/>{account}</div> : 
