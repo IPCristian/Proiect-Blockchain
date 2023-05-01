@@ -118,14 +118,8 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "reservationId",
-						"type": "uint256"
-					}
-				],
-				"name": "cancelReservation",
+				"inputs": [],
+				"name": "freeUpExpiredSpots",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -297,11 +291,11 @@
 	},
 	"sources": {
 		"SmartParking.sol": {
-			"keccak256": "0xbdd5014ad577a8ea6dc915813c59fdbe08bd02b96787c43744b96e59d3b8ea90",
+			"keccak256": "0x4a4f2142227ca73e001562532fdd09416d5c96b15dd02dec9479bbc73b00fda9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://42db031943b0345cb6af40561473ddcad42dd663125d96be006a8988405ad995",
-				"dweb:/ipfs/Qmd3oV6ZYEgJqbaf5Mj3stxgorwVk7mvHw3mb6wZxmoZKd"
+				"bzz-raw://f00bdefbf143dd6c9f06ef82bb3b68fff4aed196d75fff814007ff89d74064fc",
+				"dweb:/ipfs/QmZLREueh5BFWZqfZ2mFbW4eUPyANNZMp3ZP3wwiyfhVSZ"
 			]
 		}
 	},

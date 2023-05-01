@@ -10,19 +10,18 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Slide, DialogContentText, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material/';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Slide, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material/';
 
 const web3 = new Web3('ws://127.0.0.1:7545');
 const SmartParkingABI = require('./SmartParking.json');
-const contractAdress = "0x4bFC8Bfa49ba45E816cE51967707ee807E3d7f31";
+const contractAdress = "0x1FEC4Ba072740AA267507030968CF9fd808DAa32";
 const contract = new web3.eth.Contract(SmartParkingABI,contractAdress);
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
-// Not used anymore
+// Can't happen since it doesn't render this part of the code if the user isn't authenticated
 function WarningDialog({ open, onClose }) {
 
   const handleClose = () => {
@@ -229,6 +228,8 @@ function App() {
     // Fetch the list of parking spots
     async function fetchData() {
 
+      await contract.methods.freeUpExpiredSpots().call();
+
       const parkingSpotsCount = await contract.methods.parkingSpotsCount().call();
       const parkingSpots = [];
 
@@ -252,7 +253,6 @@ function App() {
         parkingSpots.push(newParkingSpot);
         setSpots(parkingSpots);
       })
-
     }
 
     const parkingSpotAddedEvent = contract.events.ParkingSpotAdded({});

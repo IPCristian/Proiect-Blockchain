@@ -63,18 +63,18 @@ contract SmartParking {
         }
     }
 
-    function cancelReservation(uint reservationId) public {
-        require(reservationId < reservationsCount, "Invalid reservation ID");
-        Reservation storage reservation = reservations[reservationId];
-        require(reservation.user == msg.sender, "Not authorized to cancel reservation");
-
-        parkingSpots[reservation.parkingSpotId].available = true;
-        emit ReservationCanceled(reservationId);
-        delete reservations[reservationId];
-        reservationsCount--;
-
-        uint refund = parkingSpots[reservation.parkingSpotId].hourlyRate * ((reservation.endTime - reservation.startTime) / 3600);
-        payable(msg.sender).transfer(refund);
+    function freeUpExpiredSpots() public {
+        uint toDecrement = 0;
+        for (uint i = 0; i < reservationsCount; i++) {
+            Reservation storage reservation = reservations[i];
+            if (block.timestamp >= reservation.endTime) {
+                uint parkingSpotId = reservation.parkingSpotId;
+                parkingSpots[parkingSpotId].available = true;
+                emit ReservationCanceled(i);
+                delete reservations[i];
+                toDecrement++;
+            }
+        }
+        reservationsCount-=toDecrement;
     }
-
 }
